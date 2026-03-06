@@ -22,13 +22,19 @@ export async function createOrder(orderId: string, orderData?: any): Promise<Ord
   const command = new PutCommand({
     TableName: TABLE_NAME,
     Item: order,
+    ConditionExpression: "attribute_not_exists(orderId)",
   });
 
   try {
     await docClient.send(command);
     console.log(`Order created: ${orderId}`);
     return order;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === "ConditionalCheckFailedException") {
+      console.log(`Order ${orderId} already exists, returning existing order`);
+      const existing = await getOrder(orderId);
+      return existing as Order;
+    }
     console.error("Failed to create order:", error);
     throw error;
   }

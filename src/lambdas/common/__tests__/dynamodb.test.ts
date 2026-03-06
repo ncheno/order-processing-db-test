@@ -67,4 +67,23 @@ describe("DynamoDB Operations", () => {
     const calls = dynamoMock.commandCalls(UpdateCommand);
     expect(calls).toHaveLength(1);
   });
+
+  test("createOrder does not overwrite existing order (idempotency)", async () => {
+    const conditionalError = new Error("The conditional request failed");
+    (conditionalError as any).name = "ConditionalCheckFailedException";
+    dynamoMock.on(PutCommand).rejects(conditionalError);
+    dynamoMock.on(GetCommand).resolves({
+      Item: {
+        orderId: "existing-order",
+        status: "PENDING",
+        paymentStatus: "PAID",
+        shippingStatus: "PENDING",
+      },
+    });
+
+    const order = await createOrder("existing-order", { customerName: "John" });
+
+    expect(order.orderId).toBe("existing-order");
+    expect(order.paymentStatus).toBe("PAID");
+  });
 });

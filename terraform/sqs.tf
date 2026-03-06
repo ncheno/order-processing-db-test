@@ -1,6 +1,6 @@
 resource "aws_sqs_queue" "payment_queue" {
-  name                      = "payment-queue"
-  message_retention_seconds = 1209600
+  name                       = "payment-queue"
+  message_retention_seconds  = 1209600
   visibility_timeout_seconds = 300
 
   tags = {
@@ -18,8 +18,8 @@ resource "aws_sqs_queue" "payment_queue_dlq" {
 }
 
 resource "aws_sqs_queue" "shipping_queue" {
-  name                      = "shipping-queue"
-  message_retention_seconds = 1209600
+  name                       = "shipping-queue"
+  message_retention_seconds  = 1209600
   visibility_timeout_seconds = 300
 
   tags = {

@@ -116,6 +116,15 @@ resource "aws_iam_role_policy" "process_payment_policy" {
       {
         Effect = "Allow"
         Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ]
+        Resource = aws_sqs_queue.payment_queue.arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
           "lambda:InvokeFunction"
         ]
         Resource = "arn:aws:lambda:*:*:function:complete-order"
@@ -188,6 +197,15 @@ resource "aws_iam_role_policy" "process_shipping_policy" {
           "dynamodb:UpdateItem"
         ]
         Resource = aws_dynamodb_table.orders.arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ]
+        Resource = aws_sqs_queue.shipping_queue.arn
       },
       {
         Effect = "Allow"
