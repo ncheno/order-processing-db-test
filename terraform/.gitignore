@@ -1,0 +1,28 @@
+# Terraform state files
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Terraform directory
+.terraform/
+
+# Lambda build outputs
+lambda-builds/
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+terraform.tfvars.bak
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
